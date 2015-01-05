@@ -24,6 +24,7 @@ public class SimpleIntentService extends IntentService{
 
     public static final String JSON = "com.example.JsonR.JSON";
     public static final String DONE = "com.example.JsonR.DONE";
+    public static final String REQUEST = "com.example.JsonR.REQUEST";
     private Bitmap bmp;
     public SimpleIntentService() {
         super("SimpleIntentService");
@@ -33,17 +34,17 @@ public class SimpleIntentService extends IntentService{
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
 
-            String dataString = intent.getStringExtra("request");
+            String dataString = intent.getStringExtra(REQUEST);
             try{
                 Log.d("URL", dataString);
                 String result = downloadUrl(dataString);
                 longInfo(result);
                 Intent i = new Intent();
                 i.setAction(DONE);
-                i.putExtra("JSON", result);
+                i.putExtra(JSON, result);
                 sendBroadcast(i);
             }catch (IOException e){
-                Log.d("IOExep", "erreur dans le DLintent service 1"+e.getMessage());
+                Log.d("ERROR", "Cannot open or get infos from url provided"+e.getMessage());
             }
         }
     }

@@ -33,6 +33,8 @@ public class MyMainActivity extends Activity
     private ImageView Img;
     private ListView Lv;
     private Context context;
+    private Button button;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -45,26 +47,33 @@ public class MyMainActivity extends Activity
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter);
 
+        button = (Button)findViewById(R.id.button);
         Name = (TextView)findViewById(R.id.Name);
         Img = (ImageView)findViewById(R.id.Image);
         Lv = (ListView)findViewById(R.id.listView);
         context = this;
-        //Lv.setAdapter(new CustomAdapter(this, planets));
-
-        Intent jsonM = new Intent(this, SimpleIntentService.class);
-        jsonM.putExtra("request", url);
-        Log.d("Intent", jsonM.toString());
-        this.startService(jsonM);
 
 
+        button.setOnClickListener(button_click);
     }
+
+    private View.OnClickListener button_click = new View.OnClickListener(){
+        public void onClick(View v){
+            Intent jsonM = new Intent(MyMainActivity.this, SimpleIntentService.class);
+            jsonM.putExtra(SimpleIntentService.REQUEST, url);
+            Log.d("Intent", jsonM.toString());
+            startService(jsonM);
+
+
+        }
+    };
 
 
     public class ResponseReceiver extends BroadcastReceiver {
 	    
 
 	    public void onReceive(Context context, Intent intent) {
-	    	String result = intent.getStringExtra("JSON");
+	    	String result = intent.getStringExtra(SimpleIntentService.JSON);
             String name, description, Votes;
             JSONObject tmp;
 
